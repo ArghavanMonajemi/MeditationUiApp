@@ -53,45 +53,57 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     name: String
 ) {
-    Column(
+    Box(
         modifier = modifier
             .fillMaxSize()
             .background(DeepBlue)
             .padding(top = 30.dp)
     ) {
-        GreetingSection(name = name)
-        ChipSection(chips = listOf("Sweet sleep", "Insomnia", "Depression"))
-        CurrentMeditationSection(title = "Daily Thought", duration = "3-10 min")
-        FeaturedSection(
-            listOf(
-                Feature(
-                    title = "Sleep meditation",
-                    iconId = R.drawable.ic_headphone,
-                    lightColor = BlueViolet1,
-                    mediumColor = BlueViolet2,
-                    darkColor = BlueViolet3
-                ),
-                Feature(
-                    title = "Tips for sleeping",
-                    iconId = R.drawable.ic_videocam,
-                    lightColor = LightGreen1,
-                    mediumColor = LightGreen2,
-                    darkColor = LightGreen3
-                ),
-                Feature(
-                    title = "Night island",
-                    iconId = R.drawable.ic_headphone,
-                    lightColor = Beige1,
-                    mediumColor = Beige2,
-                    darkColor = Beige3
-                ),
-                Feature(
-                    title = "Calming sounds",
-                    iconId = R.drawable.ic_headphone,
-                    lightColor = OrangeYellow3,
-                    mediumColor = OrangeYellow2,
-                    darkColor = OrangeYellow1
+        Column {
+            GreetingSection(name = name)
+            ChipSection(chips = listOf("Sweet sleep", "Insomnia", "Depression"))
+            CurrentMeditationSection(title = "Daily Thought", duration = "3-10 min")
+            FeaturedSection(
+                listOf(
+                    Feature(
+                        title = "Sleep meditation",
+                        iconId = R.drawable.ic_headphone,
+                        lightColor = BlueViolet1,
+                        mediumColor = BlueViolet2,
+                        darkColor = BlueViolet3
+                    ),
+                    Feature(
+                        title = "Tips for sleeping",
+                        iconId = R.drawable.ic_videocam,
+                        lightColor = LightGreen1,
+                        mediumColor = LightGreen2,
+                        darkColor = LightGreen3
+                    ),
+                    Feature(
+                        title = "Night island",
+                        iconId = R.drawable.ic_headphone,
+                        lightColor = Beige1,
+                        mediumColor = Beige2,
+                        darkColor = Beige3
+                    ),
+                    Feature(
+                        title = "Calming sounds",
+                        iconId = R.drawable.ic_headphone,
+                        lightColor = OrangeYellow3,
+                        mediumColor = OrangeYellow2,
+                        darkColor = OrangeYellow1
+                    )
                 )
+            )
+        }
+        BottomMenu(
+            Modifier.align(Alignment.BottomStart),
+            listOf(
+                MenuItem("Home", R.drawable.ic_home),
+                MenuItem("Meditate", R.drawable.ic_bubble),
+                MenuItem("Sleep", R.drawable.ic_moon),
+                MenuItem("Music", R.drawable.ic_music),
+                MenuItem("Profile", R.drawable.ic_profile)
             )
         )
     }
@@ -220,7 +232,8 @@ fun FeaturedSection(features: List<Feature>) {
             text = stringResource(id = R.string.feature),
             style = MaterialTheme.typography.headlineLarge,
             fontWeight = FontWeight.Bold,
-            color = TextWhite
+            color = TextWhite,
+            modifier = Modifier.padding(bottom = 15.dp)
         )
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
@@ -266,7 +279,7 @@ fun FeatureItem(feature: Feature) {
 
         //Light color path
         val lightColorPoint1 = Offset(0f, 0.35f * height)
-        val lightColorPoint2 = Offset(0.1f * width, 0.38f * height)
+        val lightColorPoint2 = Offset(0.1f * width, 0.42f * height)
         val lightColorPoint3 = Offset(0.3f * width, 0.35f * height)
         val lightColorPoint4 = Offset(0.8f * width, 0.7f * height)
         val lightColorPoint5 = Offset(1.5f * width, -0.5f * height)
@@ -312,7 +325,8 @@ fun FeatureItem(feature: Feature) {
                     modifier = Modifier
                         .clip(RoundedCornerShape(15.dp))
                         .background(ButtonBlue)
-                        .padding(vertical = 7.dp, horizontal = 15.dp), text = stringResource(id = R.string.start),
+                        .padding(vertical = 7.dp, horizontal = 15.dp),
+                    text = stringResource(id = R.string.start),
                     style = MaterialTheme.typography.bodySmall,
                     fontWeight = FontWeight.Bold
                 )
@@ -323,4 +337,43 @@ fun FeatureItem(feature: Feature) {
 
 fun Path.standardQuadraticTo(from: Offset, to: Offset) {
     quadraticBezierTo(from.x, from.y, (from.x + to.x) / 2, (from.y + to.y) / 2)
+}
+
+@Composable
+fun BottomMenu(modifier: Modifier, items: List<MenuItem>) {
+    var selectedItemIndex by remember {
+        mutableStateOf(0)
+    }
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(15.dp)
+    ) {
+        LazyRow(horizontalArrangement = Arrangement.SpaceEvenly
+        , modifier = modifier.fillMaxWidth()) {
+            items(items.size) {
+                Column(
+                    verticalArrangement = Arrangement.SpaceEvenly,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.clickable { selectedItemIndex = it }
+                ) {
+                    Icon(
+                        painter = painterResource(id = items[it].iconId),
+                        contentDescription = items[it].title,
+                        tint = Color.White,
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(10.dp))
+                            .background(if (it == selectedItemIndex) ButtonBlue else Color.Transparent)
+                            .padding(15.dp)
+                            .size(20.dp)
+                    )
+                    Text(
+                        text = items[it].title,
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier.padding(top = 5.dp)
+                    )
+                }
+            }
+        }
+    }
 }
