@@ -6,13 +6,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -34,6 +33,7 @@ import com.example.meditationuiapp.ui.theme.AquaBlue
 import com.example.meditationuiapp.ui.theme.ButtonBlue
 import com.example.meditationuiapp.ui.theme.DarkerButtonBlue
 import com.example.meditationuiapp.ui.theme.DeepBlue
+import com.example.meditationuiapp.ui.theme.LightRed
 import com.example.meditationuiapp.ui.theme.MeditationUiAppTheme
 
 @Preview
@@ -56,14 +56,17 @@ fun HomeScreen(
             .padding(top = 30.dp)
     ) {
         GreetingSection(name = name)
-        ChipSection(chips = listOf("Sweet sleep","Insomnia","Depression"))
+        ChipSection(chips = listOf("Sweet sleep", "Insomnia", "Depression"))
+        CurrentMeditationSection(title = "Daily Thought", duration = "3-10 min")
     }
 }
 
 @Composable
 fun GreetingSection(name: String) {
     Row(
-        Modifier.fillMaxWidth().padding(15.dp),
+        Modifier
+            .fillMaxWidth()
+            .padding(15.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -94,9 +97,11 @@ fun ChipSection(chips: List<String>) {
     var selectedChipIndex by remember {
         mutableStateOf(0)
     }
-    LazyRow (verticalAlignment = Alignment.CenterVertically,
+    LazyRow(
+        verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(15.dp),
-        modifier = Modifier.padding(start = 15.dp, top = 15.dp, bottom = 15.dp)){
+        modifier = Modifier.padding(start = 15.dp, top = 15.dp, bottom = 15.dp)
+    ) {
         items(chips.size) {
             ChipItem(
                 title = chips[it],
@@ -122,5 +127,48 @@ fun ChipItem(
             .padding(10.dp)
     ) {
         Text(text = title, style = MaterialTheme.typography.headlineMedium)
+    }
+}
+
+@Composable
+fun CurrentMeditationSection(
+    title: String,
+    duration: String
+) {
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .padding(15.dp)
+            .clip(RoundedCornerShape(10.dp))
+            .background(LightRed)
+            .padding(15.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Column {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.headlineMedium
+            )
+            Text(
+                text = "Meditation . $duration",
+                style = MaterialTheme.typography.bodySmall
+            )
+        }
+        Box(
+            modifier = Modifier
+                .clip(CircleShape)
+                .background(ButtonBlue)
+                .padding(15.dp)
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_play),
+                contentDescription = stringResource(
+                    id = R.string.play_icon
+                ),
+                tint = Color.White,
+                modifier = Modifier.size(14.dp)
+            )
+        }
     }
 }
