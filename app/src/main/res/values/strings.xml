@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">MeditationUiApp</string>
+    <string name="search_icon">search</string>
+    <string name="play_icon">play</string>
+    <string name="featured">Featured</string>
+    <string name="start">Start</string>
 </resources>
